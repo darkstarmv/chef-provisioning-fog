@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'chef/provisioning/fog_driver'
+#require 'chef/provisioning/fog_driver'
 
 describe Chef::Provisioning::FogDriver do
 

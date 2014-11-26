@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.email = 'jkeiser@getchef.com'
   s.homepage = 'https://github.com/opscode/chef-provisioning-fog'
 
-  s.add_dependency 'chef'
+  s.add_dependency 'chef', '>= 11.16'
   s.add_dependency 'cheffish', '>= 0.4'
   s.add_dependency 'chef-provisioning', '~> 0.15'
   s.add_dependency 'fog'

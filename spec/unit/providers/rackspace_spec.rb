@@ -1,8 +1,12 @@
-require 'chef/provisioning/fog_driver'
+require 'spec_helper'
 require 'chef/provisioning/fog_driver/providers/rackspace'
 
 describe Chef::Provisioning::FogDriver::Providers::Rackspace do
-  subject { Chef::Provisioning::FogDriver.from_provider('Rackspace',{}) }
+  subject { Chef::Provisioning::FogDriver::Driver.from_provider(
+  	'Rackspace',{
+  		  rackspace_username: 'foo',
+  		  rackspace_api_key: 'bar'
+  		}) }
 
   it "returns the correct driver" do
     expect(subject).to be_an_instance_of Chef::Provisioning::FogDriver::Providers::Rackspace
