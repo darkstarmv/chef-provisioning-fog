@@ -6,7 +6,9 @@ describe Chef::Provisioning::FogDriver::Providers::Google do
   	'Google',{
   		driver_options: {
   			compute_options: {
-	  		  google_project: 'foo'
+	  		  google_project: 'none',
+          google_client_email: 'example@developer.gserviceaccount.com',
+          google_key_location: '/file/path/to/key.p12'
 	  		}
 	  	}
 		}) }
