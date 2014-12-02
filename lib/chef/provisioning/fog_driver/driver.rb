@@ -14,6 +14,7 @@ require 'chef/provisioning/transport/winrm'
 require 'chef/provisioning/fog_driver/version'
 
 require 'fog'
+require 'fog/version'  # https://github.com/fog/fog/issues/3281
 require 'fog/core'
 require 'fog/compute'
 require 'socket'

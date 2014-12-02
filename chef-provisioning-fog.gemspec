@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'cheffish', '>= 0.4'
   s.add_dependency 'chef-provisioning', '~> 0.15'
   s.add_dependency 'fog'
+  s.add_dependency 'google-api-client'
 
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'rake'
