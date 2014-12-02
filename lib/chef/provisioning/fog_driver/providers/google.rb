@@ -11,6 +11,22 @@ module FogDriver
         compute_options[:google_client_email]
       end
 
+      def create_servers(action_handler, specs_and_options, parallelizer)
+
+        specs_and_options.each do |machine_spec, machine_options|
+          bootstrap_options = bootstrap_options_for(action_handler, machine_spec, machine_options)
+          boot_disk = compute.disks.create(bootstrap_options[:disk_options])
+          binding.pry
+        end
+
+        super(action_handler, specs_and_options, parallelizer) do |machine_spec, server|
+          yield machine_spec, server if block_given?
+          binding.pry
+          machine_options = specs_and_options[machine_spec]
+          bootstrap_options = symbolize_keys(machine_options[:bootstrap_options] || {})
+        end
+      end
+
       def self.compute_options_for(provider, id, config)
         new_compute_options = {}
         new_compute_options[:provider] = provider
