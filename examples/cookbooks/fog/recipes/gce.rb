@@ -1,8 +1,6 @@
 require 'chef/provisioning'
 require 'chef/provisioning/fog_driver/driver'
 
-# fog_key_pair 'my_bootstrap_key'
-
 with_driver(
 	'fog:Google', 
 	compute_options: {
@@ -13,11 +11,12 @@ with_driver(
 	}
 )
 
+# Use default machine_options
 with_machine_options({})
 
 machine 'mario' do
   tag 'itsa_me'
-  converge true
+  action :allocate # not bothering with transport and bootstrapping 
 end
 
 ##

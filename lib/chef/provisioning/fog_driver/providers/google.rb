@@ -64,7 +64,7 @@ module FogDriver
         new_compute_options[:google_key_location] ||= credential[:google_key_location]
     
         id = result[:driver_options][:compute_options][:google_project]
-        binding.pry
+
         [result, id]
       end
 
@@ -91,14 +91,38 @@ module FogDriver
           end
         end
 
-        # can I do a server_for here?
-        super(action_handler, specs_and_options, parallelizer) do |machine_spec, server|
-          yield machine_spec, server if block_given?
-          binding.pry
-          machine_options = specs_and_options[machine_spec]
-          bootstrap_options = symbolize_keys(machine_options[:bootstrap_options] || {})
+        begin
+          super(action_handler, specs_and_options, parallelizer) do |machine_spec, server|
+            yield machine_spec, server if block_given?
+            machine_options = specs_and_options[machine_spec]
+            bootstrap_options = symbolize_keys(machine_options[:bootstrap_options] || {})
+          end
+        # TODO cleanup
+        rescue Fog::Errors::Error => fog_error
+#          if fog_error.message.match("instance/#{machine_spec.name}")
+            Chef::Log.info(fog_error.message + "... Continuing") 
+#          else
+#            raise
+#         end
         end
       end
+
+      # Get server_for based on 'name' not 'server_id'
+      def server_for(machine_spec)
+        if machine_spec.location
+          if machine_spec.location['driver_url'] != driver_url
+            raise "Switching a machine's driver from #{machine_spec.location['driver_url']} to #{driver_url} for is not currently supported!  Use machine :destroy and then re-create the machine on the new driver."
+          end
+          if machine_spec.name
+            compute.servers.get(machine_spec.name)
+          else
+            nil
+          end
+        else
+          nil
+        end
+      end
+
     end
   end
 end

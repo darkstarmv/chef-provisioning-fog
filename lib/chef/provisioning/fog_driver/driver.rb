@@ -143,9 +143,7 @@ module FogDriver
     def self.from_provider(provider, config)
       # Figure out the options and merge them into the config
       config, id = provider_class_for(provider).compute_options_for(provider, nil, config)
-
       driver_url = "fog:#{provider}:#{id}"
-
       Provisioning.driver_for_url(driver_url, config)
     end
 
@@ -476,6 +474,9 @@ module FogDriver
 
     def server_for(machine_spec)
       if machine_spec.location
+        if machine_spec.location['driver_url'] != driver_url
+          raise "Switching a machine's driver from #{machine_spec.location['driver_url']} to #{driver_url} for is not currently supported!  Use machine :destroy and then re-create the machine on the new driver."
+        end
         compute.servers.get(machine_spec.location['server_id'])
       else
         nil
@@ -485,14 +486,7 @@ module FogDriver
     def servers_for(machine_specs)
       result = {}
       machine_specs.each do |machine_spec|
-        if machine_spec.location
-          if machine_spec.location['driver_url'] != driver_url
-            raise "Switching a machine's driver from #{machine_spec.location['driver_url']} to #{driver_url} for is not currently supported!  Use machine :destroy and then re-create the machine on the new driver."
-          end
-          result[machine_spec] = compute.servers.get(machine_spec.location['server_id'])
-        else
-          result[machine_spec] = nil
-        end
+        result[machine_spec] = server_for(machine_spec)
       end
       result
     end
